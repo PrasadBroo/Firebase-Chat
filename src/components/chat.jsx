@@ -4,15 +4,27 @@ import "../css/chat.css";
 import ChatMsg from "./chatMsg";
 import "../css/chatmsg.css";
 import noteSound from "../audios/note.mp3";
+import gotmsg from "../audios/gotmsg.mp3";
+
+
 
 class Chat extends Component {
   async componentDidMount() {
     let msgsRef = firestore().collection("messages");
     let query = msgsRef.orderBy("createdAt", "desc").limit(25);
-    query.onSnapshot((next) => {
+    query.onSnapshot(async(next) => {
         this.setState({
           allMessages: next.docs.map((data) => data.data()).reverse(),
         });
+        try {
+          if(auth().currentUser.uid !==this.state.allMessages[this.state.allMessages.length-1].uid){
+          let audio = new Audio(gotmsg);
+          audio.play();
+        }
+        } catch (error) {
+          return;
+        }
+        
       });
   }
   componentDidUpdate() {
@@ -20,9 +32,10 @@ class Chat extends Component {
   }
 
   state = {
-    msg: null,
+    msg: '',
     allMessages: [],
   };
+
   render() {
     return (
       <div className="main-model">
@@ -46,6 +59,7 @@ class Chat extends Component {
             type="text"
             onChange={this.handelInputChange}
             className="msg-input"
+            value={this.state.msg}
           />
           <button className="send-msg" onClick={this.handelSubmit}>
             <i className="far fa-paper-plane"></i>
@@ -60,8 +74,12 @@ class Chat extends Component {
   };
 
   handelSubmit = async () => {
+
     let { msg } = this.state;
     let msgsRef = firestore().collection("messages");
+    let audio = new Audio(noteSound);
+    audio.play();
+    if(msg.trim().length < 1)return;
     await msgsRef.add({
       msg: msg,
       createdAt: firestore.FieldValue.serverTimestamp(),
@@ -69,8 +87,7 @@ class Chat extends Component {
       image: auth().currentUser.photoURL,
     });
 
-    let audio = new Audio(noteSound);
-    audio.play();
+    this.setState({ msg: '' });
   };
 }
 
