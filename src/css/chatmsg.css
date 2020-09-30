@@ -1,0 +1,44 @@
+
+.user-msg{
+    width: auto;
+    padding: 10px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.dumb{
+    order: 1;
+    height: 20px;
+    width: 20px;
+}
+.user-msg .wrapper{
+    display: flex;
+    align-items: center;
+}
+.user-msg img{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 5px;
+    
+}
+.user-msg p{
+    margin-top: 15px;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 10px 15px;
+}
+
+.sent img{
+    order: 1;
+    margin-left: 5px;
+}
+.sent .dumb{
+    order: 1;
+}
+.sent .wrapper{
+    order: 2;
+}
+
+

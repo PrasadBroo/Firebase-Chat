@@ -1,0 +1,61 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat',sans-serif;
+}
+body{
+   overflow-x: hidden;
+}
+
+
+/* Navbar styling prefix*/
+nav{
+    display: flex;
+    background-color: #2ecc71;
+    color: #efe;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    min-height: 8vh;
+}
+
+
+nav h1 a,nav h1 a:hover{
+    text-decoration: none;
+    color: #efe;
+}
+
+nav button{
+    outline: none;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    font-size: 20px;
+    padding: 5px;
+    transition: 1s;
+    border-radius: 5px;
+}
+
+nav button:hover{
+    background-color:#fff;
+    color: #333;
+}
+
+
+/* Navbar styling end */
+
+@media screen and (max-width:500px){
+
+    nav {
+        justify-content: space-between;
+        padding: 6px;
+    }
+    nav h1 a{
+        font-size: 25px;
+        
+    }
+    nav button{
+        font-size: 14px;
+    }
+    
+}

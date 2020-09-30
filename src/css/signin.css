@@ -1,0 +1,17 @@
+
+.sign-in{
+    background-color: #fff;
+    padding: 10px;
+    font-size: 18px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sign-in button{
+    padding: 5px;
+    border: none;
+    outline: none;
+    
+}
