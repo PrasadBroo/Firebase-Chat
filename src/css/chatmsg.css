@@ -1,5 +1,6 @@
 
 .user-msg{
+    position: relative;
     width: auto;
     padding: 10px;
     margin-bottom: 30px;

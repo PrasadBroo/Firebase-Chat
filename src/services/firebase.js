@@ -5,14 +5,14 @@ import "firebase/analytics";
 
 
 var firebaseConfig = {
-  apiKey: "xxxxxxx",
-  authDomain: "xxxxxxxx",
-  databaseURL: "xxxxxxxxx",
-  projectId: "xxxxxxxxx",
-  storageBucket: "xxxxxxxx",
-  messagingSenderId: "xxxxxxxxx",
-  appId: "xxxxxxxxxxx",
-  measurementId: "xxxxxxxxx"
+  apiKey: "xxxxxxxxxxx",
+  authDomain: "xxxxxxxxxxxxxxxx",
+  databaseURL: "xxxxxxxxxxxxxxxxxxxxxxxx",
+  projectId: "xxxxxxxxxxxxxxxxxxx",
+  storageBucket: "xxxxxxxxxxxxxxxxxxxxxxxx",
+  messagingSenderId: "xxxxxxxxxxxxx",
+  appId: "xxxxxxxxxxxxxxx",
+  measurementId: "xxxxxxxxxx"
 };
 
 firebase.initializeApp(firebaseConfig);

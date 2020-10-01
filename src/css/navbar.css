@@ -10,13 +10,17 @@ body{
 
 /* Navbar styling prefix*/
 nav{
+    width: 100%;
     display: flex;
-    background-color: #2ecc71;
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    background-color: #8e44ad;
     color: #efe;
     align-items: center;
     justify-content: space-between;
     padding: 10px;
-    min-height: 8vh;
+    min-height: 50px;
 }
 
 
