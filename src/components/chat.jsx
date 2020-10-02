@@ -6,7 +6,6 @@ import "../css/chatmsg.css";
 import noteSound from "../audios/note.mp3";
 import gotmsg from "../audios/gotmsg.mp3";
 import Filter from  'bad-words';
-import xss from 'xss';
 let filter = new Filter();
 
 
@@ -88,7 +87,7 @@ class Chat extends Component {
 
   handelInputChange = (e) => {
     this.setState({ msg: e});
-    if(e ==='' || e.length ===0){
+    if(e.trim() ==='' || e.length ===0 || e.length > 69){
       this.setState({btndisabled:true});
     }
     else{
@@ -104,21 +103,21 @@ class Chat extends Component {
     if (userMsgs.length >= 100) return alert('Your Are Banned, Happy Chatting.');
     let { msg } = this.state;
     
-    if ( msg.length > 69) return alert('Max Message Length Is Below 69');
     let msgsRef = firestore().collection("messages");
 
-    
+    let tempmsg = msg;
+    this.setState({ msg: "" ,btndisabled:true});
     let audio = new Audio(noteSound);
     audio.play();
 
     await msgsRef.add({
-      msg: filter.clean(xss(msg)),
+      msg: filter.clean(tempmsg),
       createdAt: firestore.FieldValue.serverTimestamp(),
       uid: auth().currentUser.uid,
       image: auth().currentUser.photoURL,
     });
 
-    this.setState({ msg: "" ,btndisabled:true});
+    
   };
 }
 
