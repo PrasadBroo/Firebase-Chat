@@ -5,13 +5,11 @@ import ChatMsg from "./chatMsg";
 import "../css/chatmsg.css";
 import noteSound from "../audios/note.mp3";
 import gotmsg from "../audios/gotmsg.mp3";
-import Filter from  'bad-words';
+import Filter from "bad-words";
 let filter = new Filter();
-
 
 class Chat extends Component {
   async componentDidMount() {
-    document.body.style.backgroundColor = '#333';
     let msgsRef = firestore().collection("messages");
     let query = msgsRef.orderBy("createdAt", "desc").limit(25);
     query.onSnapshot(async (next) => {
@@ -26,22 +24,17 @@ class Chat extends Component {
           let audio = new Audio(gotmsg);
           audio.play();
         }
+        window.scrollTo(0, document.body.scrollHeight);
       } catch (error) {
         return;
       }
     });
-  };
-  componentWillUnmount(){
-    document.body.style.backgroundColor = '#fff';
-  };
-  componentDidUpdate() {
-    window.scrollTo(0, document.body.scrollHeight);
-  };
+  }
 
   state = {
     msg: "",
     allMessages: [],
-    btndisabled:true,
+    btndisabled: true,
   };
 
   render() {
@@ -65,33 +58,35 @@ class Chat extends Component {
         <div className="text-msg">
           <input
             type="text"
-            onChange={(e)=> this.handelInputChange(e.target.value)}
+            onChange={(e) => this.handelInputChange(e.target.value)}
             className="msg-input"
             value={this.state.msg}
             onKeyDown={this._handleKeyDown}
           />
-          <button className="send-msg" disabled={this.state.btndisabled} onClick={this.handelSubmit}>
+          <button
+            className="send-msg"
+            disabled={this.state.btndisabled}
+            onClick={this.handelSubmit}
+          >
             <i className="far fa-paper-plane"></i>
           </button>
         </div>
       </div>
     );
   }
-  
-  _handleKeyDown = (e)=> {
-    if (e.key === 'Enter') {
-      this.handelSubmit()
-    }
-  }
 
+  _handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      this.handelSubmit();
+    }
+  };
 
   handelInputChange = (e) => {
-    this.setState({ msg: e});
-    if(e.trim() ==='' || e.length ===0 || e.length > 69){
-      this.setState({btndisabled:true});
-    }
-    else{
-      this.setState({btndisabled:false});
+    this.setState({ msg: e });
+    if (e.trim() === "" || e.length === 0 || e.length > 69) {
+      this.setState({ btndisabled: true });
+    } else {
+      this.setState({ btndisabled: false });
     }
   };
 
@@ -100,13 +95,14 @@ class Chat extends Component {
       .collection("messages")
       .where("uid", "==", auth().currentUser.uid);
     let userMsgs = (await totalUserMsgs.get()).docs.map((doc) => doc.data());
-    if (userMsgs.length >= 100) return alert('Your Are Banned, Happy Chatting.');
+    if (userMsgs.length >= 100)
+      return alert("Your Are Banned, Happy Chatting.");
     let { msg } = this.state;
-    
+
     let msgsRef = firestore().collection("messages");
 
     let tempmsg = msg;
-    this.setState({ msg: "" ,btndisabled:true});
+    this.setState({ msg: "", btndisabled: true });
     let audio = new Audio(noteSound);
     audio.play();
 
@@ -116,8 +112,6 @@ class Chat extends Component {
       uid: auth().currentUser.uid,
       image: auth().currentUser.photoURL,
     });
-
-    
   };
 }
 

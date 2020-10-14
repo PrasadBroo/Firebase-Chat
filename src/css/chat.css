@@ -1,4 +1,4 @@
-body{
+body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -7,26 +7,28 @@ body{
     scroll-behavior: smooth;
 }
 
-.main-model{
-    background-color: transparent;
+.main-model {
     height: 92vh;
     margin-top: 55px;
+    margin-bottom: 50px;
     position: relative;
 }
 
-.text-msg{
+.all-msgs {
+    background-color: #333;
+}
+
+.text-msg {
     position: fixed;
-    /* background-color: red; */
     bottom: 0;
-    left:0;
+    left: 0;
     width: 100%;
     z-index: 1;
-    /* padding: 5px; */
     display: flex;
     align-items: center;
 }
 
-.msg-input{
+.msg-input {
     width: 95%;
     outline: none;
     background-color: #ecf0f1;
@@ -38,7 +40,7 @@ body{
     font-size: 18px;
 }
 
-.send-msg{
+.send-msg {
     width: 5%;
     min-width: 50px;
     min-height: 50px;
@@ -52,8 +54,7 @@ body{
     color: #fff;
 }
 
-.send-msg:disabled{
+.send-msg:disabled {
     background-color: #401652;
     cursor: not-allowed;
 }
-
