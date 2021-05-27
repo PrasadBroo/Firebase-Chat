@@ -16,6 +16,7 @@ body {
 
 .all-msgs {
     background-color: #333;
+    padding-bottom: 2rem;
 }
 
 .text-msg {
