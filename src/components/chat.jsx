@@ -6,16 +6,19 @@ import "../css/chatmsg.css";
 import noteSound from "../audios/note.mp3";
 import gotmsg from "../audios/gotmsg.mp3";
 import Filter from "bad-words";
+import Loader from "./Loader";
 let filter = new Filter();
 
 class Chat extends Component {
   async componentDidMount() {
     let msgsRef = firestore().collection("messages");
     let query = msgsRef.orderBy("createdAt", "desc").limit(25);
+    this.state.gotMessages = true;
     query.onSnapshot(async (next) => {
       this.setState({
         allMessages: next.docs.map((data) => data.data()).reverse(),
       });
+      
       try {
         if (
           auth().currentUser.uid !==
@@ -35,12 +38,14 @@ class Chat extends Component {
     msg: "",
     allMessages: [],
     btndisabled: true,
+    gotMessages:false
   };
 
   render() {
     return (
       <div className="main-model">
         <div className="all-msgs">
+          {!this.state.gotMessages && <Loader/>}
           {this.state.allMessages.map((data, i) => {
             if (data.uid === auth().currentUser.uid) {
               return (
