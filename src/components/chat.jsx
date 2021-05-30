@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { firestore, auth } from "../services/firebase";
+import { firestore, auth,firebaseStorage } from "../services/firebase";
 import "../css/chat.css";
 import ChatMsg from "./chatMsg";
 import "../css/chatmsg.css";
@@ -18,7 +18,7 @@ class Chat extends Component {
       this.setState({
         allMessages: next.docs.map((data) => data.data()).reverse(),
       });
-      
+
       try {
         if (
           auth().currentUser.uid !==
@@ -38,18 +38,22 @@ class Chat extends Component {
     msg: "",
     allMessages: [],
     btndisabled: true,
-    gotMessages:false
+    gotMessages: false,
+    isImageUploading:false,
+    isImageUploaded:true,
   };
 
   render() {
     return (
       <div className="main-model">
         <div className="all-msgs">
-          {!this.state.gotMessages && <Loader/>}
+          {!this.state.gotMessages && <Loader />}
           {this.state.allMessages.map((data, i) => {
             if (data.uid === auth().currentUser.uid) {
               return (
                 <ChatMsg
+                  type={data.type ?? null}
+                  displayImg={data.messgaeImg}
                   image={data.image}
                   msg={data.msg}
                   key={i}
@@ -61,6 +65,21 @@ class Chat extends Component {
           })}
         </div>
         <div className="text-msg">
+          <div className="fileInput">
+            <button className="imageInput" onClick={this.handelFileInput}>
+              <i className="fas fa-link"></i>
+            </button>
+            <input
+              type="file"
+              accept="image/*"
+              alt="Input Image"
+              id="my_file"
+              hidden
+              multiple={false}
+              onChange={this.handelImageChange}
+            ></input>
+          </div>
+
           <input
             type="text"
             onChange={(e) => this.handelInputChange(e.target.value)}
@@ -117,6 +136,35 @@ class Chat extends Component {
       uid: auth().currentUser.uid,
       image: auth().currentUser.photoURL,
     });
+  };
+
+  handelImageChange = async(e) => {
+    try {
+      const [file] = e.target.files;
+    const ref = firebaseStorage().ref('images');
+    const fileName = (new Date()) + '-' + file.name;
+    const metadata = {contentType: file.type}
+    const task = await ref.child(fileName).put(file, metadata);
+    this.addImageToMessgae(await task.ref.getDownloadURL());
+    } catch (error) {
+      alert(error.message)
+    }
+    
+  };
+
+ async addImageToMessgae(downloadUrl){
+    let msgsRef = firestore().collection("messages");
+    await msgsRef.add({
+      type:'image',
+      messgaeImg:downloadUrl,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+      uid: auth().currentUser.uid,
+      image: auth().currentUser.photoURL,
+    })
+  }
+
+  handelFileInput () {
+    document.getElementById("my_file").click();
   };
 }
 

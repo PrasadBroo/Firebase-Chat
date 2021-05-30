@@ -18,7 +18,20 @@ body {
     background-color: #333;
     padding-bottom: 2rem;
 }
+.imageInput{
+    position: fixed;
+    z-index: 10;
+    bottom: 5px;
+    left: 10px;
+    border: 0;
+    outline: none;
+    font-size: 1.5rem;
+    color: #333;
+}
 
+.imageInput:active{
+    outline: 0;
+}
 .text-msg {
     position: fixed;
     bottom: 0;
@@ -35,11 +48,12 @@ body {
     background-color: #ecf0f1;
     float: left;
     height: 50px;
-    padding-left: 20px;
+    padding-left: 40px;
     border: none;
     color: #333;
     font-size: 18px;
 }
+
 
 .send-msg {
     width: 5%;
