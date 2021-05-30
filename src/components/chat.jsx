@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { firestore, auth,firebaseStorage } from "../services/firebase";
+import { firestore, auth, firebaseStorage } from "../services/firebase";
 import "../css/chat.css";
 import ChatMsg from "./chatMsg";
 import "../css/chatmsg.css";
@@ -7,6 +7,7 @@ import noteSound from "../audios/note.mp3";
 import gotmsg from "../audios/gotmsg.mp3";
 import Filter from "bad-words";
 import Loader from "./Loader";
+import ImageModel from "./ImageModel";
 let filter = new Filter();
 
 class Chat extends Component {
@@ -39,19 +40,27 @@ class Chat extends Component {
     allMessages: [],
     btndisabled: true,
     gotMessages: false,
-    isImageUploading:false,
-    isImageUploaded:true,
+    isImageUploading: false,
+    isImageUploaded: true,
+    displayImagePopup: false,
+    displayPopupImageUrl: false,
   };
 
   render() {
     return (
       <div className="main-model">
+        <ImageModel
+          display={this.state.displayImagePopup}
+          displayPopupImageUrl={this.state.displayPopupImageUrl}
+          hidepopup={() => this.setState({ displayImagePopup: false })}
+        />
         <div className="all-msgs">
           {!this.state.gotMessages && <Loader />}
           {this.state.allMessages.map((data, i) => {
             if (data.uid === auth().currentUser.uid) {
               return (
                 <ChatMsg
+                  handelPopup={this.handelImagePopup}
                   type={data.type ?? null}
                   displayImg={data.messgaeImg}
                   image={data.image}
@@ -61,7 +70,14 @@ class Chat extends Component {
                 />
               );
             }
-            return <ChatMsg image={data.image} msg={data.msg} key={i} />;
+            return (
+              <ChatMsg
+                image={data.image}
+                msg={data.msg}
+                key={i}
+                what="received"
+              />
+            );
           })}
         </div>
         <div className="text-msg">
@@ -138,33 +154,36 @@ class Chat extends Component {
     });
   };
 
-  handelImageChange = async(e) => {
+  handelImageChange = async (e) => {
     try {
       const [file] = e.target.files;
-    const ref = firebaseStorage().ref('images');
-    const fileName = (new Date()) + '-' + file.name;
-    const metadata = {contentType: file.type}
-    const task = await ref.child(fileName).put(file, metadata);
-    this.addImageToMessgae(await task.ref.getDownloadURL());
+      const ref = firebaseStorage().ref("images");
+      const fileName = new Date() + "-" + file.name;
+      const metadata = { contentType: file.type };
+      const task = await ref.child(fileName).put(file, metadata);
+      this.addImageToMessgae(await task.ref.getDownloadURL());
     } catch (error) {
-      alert(error.message)
+      alert(error.message);
     }
-    
   };
 
- async addImageToMessgae(downloadUrl){
+  async addImageToMessgae(downloadUrl) {
     let msgsRef = firestore().collection("messages");
     await msgsRef.add({
-      type:'image',
-      messgaeImg:downloadUrl,
+      type: "image",
+      messgaeImg: downloadUrl,
       createdAt: firestore.FieldValue.serverTimestamp(),
       uid: auth().currentUser.uid,
       image: auth().currentUser.photoURL,
-    })
+    });
   }
 
-  handelFileInput () {
+  handelFileInput() {
     document.getElementById("my_file").click();
+  }
+
+  handelImagePopup = (imageUrl) => {
+    this.setState({ displayImagePopup: true, displayPopupImageUrl: imageUrl });
   };
 }
 
