@@ -27,6 +27,7 @@ body {
     outline: none;
     font-size: 1.5rem;
     color: #333;
+    background-color: transparent;
 }
 
 .imageInput:active{
@@ -72,7 +73,4 @@ body {
 .send-msg:disabled {
     background-color: #401652;
     cursor: not-allowed;
-}
-.fa-link{
-    background-color: transparent;
 }
