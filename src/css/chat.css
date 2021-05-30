@@ -73,3 +73,6 @@ body {
     background-color: #401652;
     cursor: not-allowed;
 }
+.fa-link{
+    background-color: transparent;
+}
