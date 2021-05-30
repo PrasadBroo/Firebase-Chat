@@ -17,7 +17,7 @@ export default function ImageModel(props) {
         </span>
         <img
           className="modal-content"
-          src={props.displayPopupImageUrl}
+          src={props.displayPopupImageUrl ? props.displayPopupImageUrl : undefined}
           alt="yoyo"
           id="img01"
         ></img>

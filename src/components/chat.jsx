@@ -61,7 +61,7 @@ class Chat extends Component {
               return (
                 <ChatMsg
                   handelPopup={this.handelImagePopup}
-                  type={data.type ?? null}
+                  type={data.type ?? 'text'}
                   displayImg={data.messgaeImg}
                   image={data.image}
                   msg={data.msg}
@@ -72,6 +72,9 @@ class Chat extends Component {
             }
             return (
               <ChatMsg
+                handelPopup={this.handelImagePopup}
+                type={data.type ?? 'text'}
+                displayImg={data.messgaeImg}
                 image={data.image}
                 msg={data.msg}
                 key={i}
