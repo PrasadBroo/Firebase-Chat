@@ -1,3 +1,5 @@
+import BlockUi from 'react-block-ui';
+import 'react-block-ui/style.css';
 import React, { Component } from "react";
 import { firestore, auth, firebaseStorage } from "../services/firebase";
 import "../css/chat.css";
@@ -6,9 +8,9 @@ import "../css/chatmsg.css";
 import noteSound from "../audios/note.mp3";
 import gotmsg from "../audios/gotmsg.mp3";
 import Filter from "bad-words";
-import Loader from "./Loader";
 import ImageModel from "./ImageModel";
 let filter = new Filter();
+
 
 class Chat extends Component {
   async componentDidMount() {
@@ -48,14 +50,15 @@ class Chat extends Component {
 
   render() {
     return (
-      <div className="main-model">
+      <BlockUi tag="div" color="primary" className={this.state.gotMessages ? 'hideBlockUi' : 'showBlockUi'} message="Loading please wait" blocking={!this.state.gotMessages} >
+        <div className="main-model">
         <ImageModel
           display={this.state.displayImagePopup}
           displayPopupImageUrl={this.state.displayPopupImageUrl}
           hidepopup={() => this.setState({ displayImagePopup: false })}
         />
         <div className="all-msgs">
-          {!this.state.gotMessages && <Loader />}
+          {/* {!this.state.gotMessages && <Loader />} */}
           {this.state.allMessages.map((data, i) => {
             if (data.uid === auth().currentUser.uid) {
               return (
@@ -115,6 +118,8 @@ class Chat extends Component {
           </button>
         </div>
       </div>
+      </BlockUi>
+      
     );
   }
 
