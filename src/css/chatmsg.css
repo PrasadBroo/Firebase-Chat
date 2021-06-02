@@ -1,17 +1,13 @@
 
 .user-msg{
-    position: relative;
-    width: auto;
-    padding: 10px;
-    margin-bottom: 30px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    margin: 2rem 0;
 }
 .image{
     max-width: 200px;
     max-height: 200px;
-    margin-right: 5px;
+    margin: 5px;
 }
 
 .imageAsMessgae{
@@ -24,15 +20,7 @@
 .imageAsMessgae:hover{
     opacity: 0.7;
 }
-.dumb{
-    order: 1;
-    height: 20px;
-    width: 20px;
-}
-.user-msg .wrapper{
-    display: flex;
-    align-items: center;
-}
+
 .user-msg .userProfile{
     height: 40px;
     width: 40px;
@@ -41,21 +29,16 @@
     
 }
 .user-msg p{
-    margin-top: 15px;
+    position: relative;
+    margin: 5px;
     background-color: #fff;
     border-radius: 20px;
     padding: 10px 15px;
 }
 
-.sent img{
-    order: 1;
-    margin-left: 5px;
+.sent {
+    flex-direction: row-reverse;
 }
-.sent .dumb{
-    order: 1;
-}
-.sent .wrapper{
-    order: 2;
-}
+
 
 
