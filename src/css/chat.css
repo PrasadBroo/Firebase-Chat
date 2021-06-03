@@ -15,6 +15,9 @@ body {
 
 .all-msgs {
     background-color: #333;
+    overflow: hidden;
+}
+.loaded{
     padding-bottom: 2rem;
 }
 .imageInput{
@@ -77,4 +80,36 @@ body {
 .showBlockUi{
     min-height: 100vh;
     overflow: hidden;
+}
+.imgaeUploadProgress{
+    position: fixed;
+    top: 75px;
+    height: 5px;
+    z-index: 1;
+    background-color: gainsboro;
+}
+
+.skeleton{
+    background-color: #fff;
+    height: 100vh;
+    animation-duration: 1.5s;
+    animation-timing-function: ease-in-out;
+    animation-delay: 0.5s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+    animation-name: MuiSkeleton-keyframes-pulsee;
+}
+
+@keyframes MuiSkeleton-keyframes-pulsee {
+   0%{
+    opacity: 1;
+   } 
+   50%{
+       opacity: 0.4;
+   }
+   100%{
+       opacity: 1;
+   }
 }

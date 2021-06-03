@@ -1,5 +1,3 @@
-import BlockUi from 'react-block-ui';
-import 'react-block-ui/style.css';
 import React, { Component } from "react";
 import { firestore, auth, firebaseStorage } from "../services/firebase";
 import "../css/chat.css";
@@ -10,7 +8,6 @@ import gotmsg from "../audios/gotmsg.mp3";
 import Filter from "bad-words";
 import ImageModel from "./ImageModel";
 let filter = new Filter();
-
 
 class Chat extends Component {
   async componentDidMount() {
@@ -46,80 +43,88 @@ class Chat extends Component {
     isImageUploaded: true,
     displayImagePopup: false,
     displayPopupImageUrl: false,
+    imageUploadProgress: 0,
   };
 
   render() {
     return (
-      <BlockUi tag="div" color="primary" className={this.state.gotMessages ? 'hideBlockUi' : 'showBlockUi'} message="Loading please wait" blocking={!this.state.gotMessages} >
+      <>
+        {this.state.isImageUploading ? (
+          <div
+            className="imgaeUploadProgress"
+            style={{ width: this.state.imageUploadProgress + "%" }}
+          ></div>
+        ) : null}
         <div className="main-model">
-        <ImageModel
-          display={this.state.displayImagePopup}
-          displayPopupImageUrl={this.state.displayPopupImageUrl}
-          hidepopup={() => this.setState({ displayImagePopup: false })}
-        />
-        <div className="all-msgs">
-          {/* {!this.state.gotMessages && <Loader />} */}
-          {this.state.allMessages.map((data, i) => {
-            if (data.uid === auth().currentUser.uid) {
+          <ImageModel
+            display={this.state.displayImagePopup}
+            displayPopupImageUrl={this.state.displayPopupImageUrl}
+            hidepopup={() => this.setState({ displayImagePopup: false })}
+          />
+          <div className={ this.state.allMessages ? "all-msgs amloaded" : "all-msgs amloading"}>
+            {!this.state.gotMessages && <div className="skeleton"></div>
+            }
+            {this.state.gotMessages && this.state.allMessages.map((data, i) => {
+              if (data.uid === auth().currentUser.uid) {
+                return (
+                  <ChatMsg
+                    handelPopup={this.handelImagePopup}
+                    type={data.type ?? "text"}
+                    displayImg={data.messgaeImg}
+                    image={data.image}
+                    msg={data.msg}
+                    key={i}
+                    what="sent"
+                  />
+                );
+              }
               return (
                 <ChatMsg
                   handelPopup={this.handelImagePopup}
-                  type={data.type ?? 'text'}
+                  type={data.type ?? "text"}
                   displayImg={data.messgaeImg}
                   image={data.image}
                   msg={data.msg}
                   key={i}
-                  what="sent"
+                  what="received"
                 />
               );
-            }
-            return (
-              <ChatMsg
-                handelPopup={this.handelImagePopup}
-                type={data.type ?? 'text'}
-                displayImg={data.messgaeImg}
-                image={data.image}
-                msg={data.msg}
-                key={i}
-                what="received"
-              />
-            );
-          })}
-        </div>
-        <div className="text-msg">
-          <div className="fileInput">
-            <button className="imageInput" onClick={this.handelFileInput}>
-              <i className="fas fa-link"></i>
-            </button>
-            <input
-              type="file"
-              accept="image/*"
-              alt="Input Image"
-              id="my_file"
-              hidden
-              multiple={false}
-              onChange={this.handelImageChange}
-            ></input>
+            })}
           </div>
+          <div className="text-msg">
+            <div className="fileInput">
+              <button className="imageInput" onClick={this.handelFileInput}>
+                <i className="fas fa-link"></i>
+              </button>
+              <input
+                type="file"
+                accept="image/*"
+                alt="Input Image"
+                id="my_file"
+                hidden
+                multiple={false}
+                onChange={this.handelImageChange}
+              ></input>
+            </div>
 
-          <input
-            type="text"
-            onChange={(e) => this.handelInputChange(e.target.value)}
-            className="msg-input"
-            value={this.state.msg}
-            onKeyDown={this._handleKeyDown}
-          />
-          <button
-            className="send-msg"
-            disabled={this.state.btndisabled}
-            onClick={this.handelSubmit}
-          >
-            <i className="far fa-paper-plane"></i>
-          </button>
+            <input
+              type="text"
+              onChange={(e) => this.handelInputChange(e.target.value)}
+              className="msg-input"
+              value={this.state.msg}
+              onKeyDown={this._handleKeyDown}
+            />
+            <button
+              className="send-msg"
+              disabled={this.state.btndisabled}
+              onClick={this.handelSubmit}
+            >
+              <i className="far fa-paper-plane"></i>
+            </button>
+          </div>
         </div>
-      </div>
-      </BlockUi>
-      
+      </>
+        
     );
   }
 
@@ -168,8 +173,14 @@ class Chat extends Component {
       const ref = firebaseStorage().ref("images");
       const fileName = new Date() + "-" + file.name;
       const metadata = { contentType: file.type };
-      const task = await ref.child(fileName).put(file, metadata);
-      this.addImageToMessgae(await task.ref.getDownloadURL());
+      const task = ref.child(fileName).put(file, metadata);
+      this.setState({ isImageUploading: true });
+      task.on(
+        firebaseStorage.TaskEvent.STATE_CHANGED,
+        this.handelImageUploadProgress,
+        this.handelUploadErrors,
+        () => this.handelImageUploadSuccess(task.snapshot)
+      );
     } catch (error) {
       alert(error.message);
     }
@@ -192,6 +203,20 @@ class Chat extends Component {
 
   handelImagePopup = (imageUrl) => {
     this.setState({ displayImagePopup: true, displayPopupImageUrl: imageUrl });
+  };
+
+  handelImageUploadProgress = (snapshot) => {
+    let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log(progress);
+    this.setState({ imageUploadProgress: progress });
+  };
+  handelImageUploadSuccess = async (task) => {
+    let url = await task.ref.getDownloadURL();
+    this.addImageToMessgae(url);
+    this.setState({ isImageUploading: false });
+  };
+  handelUploadErrors = (error) => {
+    alert(error.message);
   };
 }
 
