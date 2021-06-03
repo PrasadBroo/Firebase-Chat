@@ -43,7 +43,7 @@ class Chat extends Component {
     isImageUploaded: true,
     displayImagePopup: false,
     displayPopupImageUrl: false,
-    imageUploadProgress: 0,
+    imageUploadProgress: 90,
   };
 
   render() {

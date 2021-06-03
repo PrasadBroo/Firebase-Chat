@@ -84,9 +84,10 @@ body {
 .imgaeUploadProgress{
     position: fixed;
     top: 75px;
+    border-radius: 10px;
     height: 5px;
     z-index: 1;
-    background-color: gainsboro;
+    background-color: lightgreen;
 }
 
 .skeleton{
@@ -112,4 +113,10 @@ body {
    100%{
        opacity: 1;
    }
+}
+
+@media screen and (max-width:500px){
+    .imgaeUploadProgress{
+        top: 68px;
+    }
 }
